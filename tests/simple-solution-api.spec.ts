@@ -2,6 +2,15 @@ import { expect, test } from '@playwright/test'
 
 import { StatusCodes } from 'http-status-codes'
 
+let baseUrl: string
+let endpoint: string
+let orderId: number
+let key: string
+
+test.beforeAll(async () => {
+  baseUrl = "https://backend.tallinn-learning.ee"
+});
+
 test('get order with correct id should receive code 200', async ({ request }) => {
   // Build and send a GET request to the server
   const response = await request.get('https://backend.tallinn-learning.ee/test-orders/1')
@@ -61,20 +70,32 @@ test('if status is set to CLOSED it returns 400', async ({ request }) => {
 
 // HW-9
 
+
 // PUT
 
-test('', () => {
+test('Request containing ID and valid key updates order and returns order object', async ({request: req}) => {
 
+endpoint = 'test-orders'
+  orderId = 10
+  key = '1234567890123456'
+
+  const header = {api_key: key }
+
+  const body = {
+    "status": "OPEN",
+    "courierId": 12345,
+    "customerName": "John Smith",
+    "customerPhone": "67890",
+    "comment": "Delivery after 5pm",
+    "id": 54321
+}
+
+const res = await req.put(`${baseUrl}/${endpoint}/${orderId}`,
+  {data: body, headers: header})
+
+expect(res.status()).toBe(StatusCodes.OK)
 })
 
 // DELETE
 
-test('', () => {
-
-})
-
 // GET
-
-test('', () => {
-
-})
