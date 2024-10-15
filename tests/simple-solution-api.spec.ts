@@ -72,7 +72,7 @@ test('if status is set to CLOSED it returns 400', async ({ request }) => {
 
 // PUT
 
-test('Request containing ID and valid key updates order and returns order object', async ({
+test('PUT Request containing ID and valid key updates order and returns order object', async ({
   request: req,
 }) => {
   endpoint = 'test-orders'
@@ -95,7 +95,7 @@ test('Request containing ID and valid key updates order and returns order object
   expect(res.status()).toBe(StatusCodes.OK)
 })
 
-test('Request without valid key is rejected as unauthorised', async ({ request: req }) => {
+test('PUT Request without valid key is rejected as unauthorised', async ({ request: req }) => {
   endpoint = 'test-orders'
   orderId = 10
   key = ''
@@ -116,7 +116,7 @@ test('Request without valid key is rejected as unauthorised', async ({ request: 
   expect(res.status()).toBe(StatusCodes.UNAUTHORIZED)
 })
 
-test('Request with ID out of range fails as bad request', async ({ request: req }) => {
+test('PUT Request with ID out of range fails as bad request', async ({ request: req }) => {
   endpoint = 'test-orders'
   orderId = 11
   key = '1234567890123456'
@@ -139,4 +139,62 @@ test('Request with ID out of range fails as bad request', async ({ request: req 
 
 // DELETE
 
+test('DELETE Request containing ID and valid key deletes order and returns success message', async ({
+  request: req,
+}) => {
+  endpoint = 'test-orders'
+  orderId = 10
+  key = '1234567890123456'
+
+  const header = { api_key: key }
+
+  const res = await req.delete(`${baseUrl}/${endpoint}/${orderId}`, { headers: header })
+
+  expect(res.status()).toBe(StatusCodes.NO_CONTENT)
+})
+
+test('DELETE Request without valid key is rejected as unauthorised', async ({ request: req }) => {
+  endpoint = 'test-orders'
+  orderId = 10
+  key = ''
+
+  const header = { api_key: key }
+
+  const res = await req.delete(`${baseUrl}/${endpoint}/${orderId}`, { headers: header })
+
+  expect(res.status()).toBe(StatusCodes.UNAUTHORIZED)
+})
+
+test('DELETE Request with invalid order ID fails as bad request', async ({ request: req }) => {
+  endpoint = 'test-orders'
+  orderId = 11
+  key = '1234567890123456'
+
+  const header = { api_key: key }
+
+  const res = await req.delete(`${baseUrl}/${endpoint}/${orderId}`, { headers: header })
+
+  expect(res.status()).toBe(StatusCodes.BAD_REQUEST)
+})
+
 // GET
+
+test('GET Request with username and password returns API key ', async ({ request: req }) => {
+  endpoint = 'test-orders'
+  const username = 'averycreativeusername'
+  const password = 'averystrongpassword'
+
+  const res = await req.get(`${baseUrl}/${endpoint}?username=${username}&password=${password}`)
+
+  expect(res.status()).toBe(StatusCodes.OK)
+})
+
+test('GET Request without username fails as server error', async ({ request: req }) => {
+  endpoint = 'test-orders'
+  const username = ''
+  const password = 'averystrongpassword'
+
+  const res = await req.get(`${baseUrl}/${endpoint}?username=${username}&password=${password}`)
+
+  expect(res.status()).toBe(StatusCodes.INTERNAL_SERVER_ERROR)
+})
