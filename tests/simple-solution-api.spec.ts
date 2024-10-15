@@ -63,6 +63,18 @@ test('if status is set to CLOSED it returns 400', async ({ request }) => {
 
 // PUT
 
+test('', () => {
+
+})
+
 // DELETE
 
+test('', () => {
+
+})
+
 // GET
+
+test('', () => {
+
+})
