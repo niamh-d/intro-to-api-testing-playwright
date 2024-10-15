@@ -8,8 +8,8 @@ let orderId: number
 let key: string
 
 test.beforeAll(async () => {
-  baseUrl = "https://backend.tallinn-learning.ee"
-});
+  baseUrl = 'https://backend.tallinn-learning.ee'
+})
 
 test('get order with correct id should receive code 200', async ({ request }) => {
   // Build and send a GET request to the server
@@ -70,30 +70,71 @@ test('if status is set to CLOSED it returns 400', async ({ request }) => {
 
 // HW-9
 
-
 // PUT
 
-test('Request containing ID and valid key updates order and returns order object', async ({request: req}) => {
-
-endpoint = 'test-orders'
+test('Request containing ID and valid key updates order and returns order object', async ({
+  request: req,
+}) => {
+  endpoint = 'test-orders'
   orderId = 10
   key = '1234567890123456'
 
-  const header = {api_key: key }
+  const header = { api_key: key }
 
   const body = {
-    "status": "OPEN",
-    "courierId": 12345,
-    "customerName": "John Smith",
-    "customerPhone": "67890",
-    "comment": "Delivery after 5pm",
-    "id": 54321
-}
+    status: 'OPEN',
+    courierId: 12345,
+    customerName: 'John Smith',
+    customerPhone: '67890',
+    comment: 'Delivery after 5pm',
+    id: 54321,
+  }
 
-const res = await req.put(`${baseUrl}/${endpoint}/${orderId}`,
-  {data: body, headers: header})
+  const res = await req.put(`${baseUrl}/${endpoint}/${orderId}`, { data: body, headers: header })
 
-expect(res.status()).toBe(StatusCodes.OK)
+  expect(res.status()).toBe(StatusCodes.OK)
+})
+
+test('Request without valid key is rejected as unauthorised', async ({ request: req }) => {
+  endpoint = 'test-orders'
+  orderId = 10
+  key = ''
+
+  const header = { api_key: key }
+
+  const body = {
+    status: 'OPEN',
+    courierId: 12345,
+    customerName: 'John Smith',
+    customerPhone: '67890',
+    comment: 'Delivery after 5pm',
+    id: 54321,
+  }
+
+  const res = await req.put(`${baseUrl}/${endpoint}/${orderId}`, { data: body, headers: header })
+
+  expect(res.status()).toBe(StatusCodes.UNAUTHORIZED)
+})
+
+test('Request with ID out of range fails as bad request', async ({ request: req }) => {
+  endpoint = 'test-orders'
+  orderId = 11
+  key = '1234567890123456'
+
+  const header = { api_key: key }
+
+  const body = {
+    status: 'OPEN',
+    courierId: 12345,
+    customerName: 'John Smith',
+    customerPhone: '67890',
+    comment: 'Delivery after 5pm',
+    id: 54321,
+  }
+
+  const res = await req.put(`${baseUrl}/${endpoint}/${orderId}`, { data: body, headers: header })
+
+  expect(res.status()).toBe(StatusCodes.BAD_REQUEST)
 })
 
 // DELETE
