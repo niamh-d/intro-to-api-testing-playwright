@@ -58,3 +58,11 @@ test('if status is set to CLOSED it returns 400', async ({ request }) => {
   })
   expect(response.status()).toBe(StatusCodes.BAD_REQUEST)
 })
+
+// HW-9
+
+// PUT
+
+// DELETE
+
+// GET
