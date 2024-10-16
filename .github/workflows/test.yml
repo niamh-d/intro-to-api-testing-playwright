@@ -42,9 +42,9 @@ jobs:
       - name: Run Playwright API tests
         run: |
           echo "Running Playwright to execute API tests..."
-          npm test:pw   
+          npm run test:pw   
 
       - name: Run Jest API tests
         run: |
           echo "Running Jest to execute API tests..."
-          npm test:j
+          npm run test:j
