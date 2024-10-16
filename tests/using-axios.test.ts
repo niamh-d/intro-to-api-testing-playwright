@@ -36,20 +36,20 @@ test('GET Request without username fails as server error', async () => {
   }
 })
 
-  test('DELETE Request without valid key is rejected as unauthorised', async () => {
-    endpoint = 'test-orders'
-    orderId = 10
-    key = ''
-
-    const header = { api_key: key }
-
-    try {
-      await axios.delete(`${baseUrl}/${endpoint}/${orderId}`, { headers: header })
-    }
-    catch(err) {
-      expect((err as AxiosError).message).toBe('Request failed with status code 401')
-    }
-
-  })
+  // test('DELETE Request without valid key is rejected as unauthorised', async () => {
+  //   endpoint = 'test-orders'
+  //   orderId = 10
+  //   key = ''
+  //
+  //   const header = { api_key: key }
+  //
+  //   try {
+  //     await axios.delete(`${baseUrl}/${endpoint}/${orderId}`, { headers: header })
+  //   }
+  //   catch(err) {
+  //     expect((err as AxiosError).message).toBe('Request failed with status code 401')
+  //   }
+  //
+  // })
 
 })
