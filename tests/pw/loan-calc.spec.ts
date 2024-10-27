@@ -21,3 +21,27 @@ test('Request with correctly formatted body returns 200 (Low risk)', async ({ re
 
   expect.soft(responseBody.riskLevel).toBe('Low Risk')
 })
+
+test('Request with correctly formatted body returns 200 (Med risk)', async ({ request }) => {
+  const response = await request.post(`${baseUrl}/${endpoint}`, {
+    data: { ...LoanCalcDto.createRandomData(), debt: 500 },
+  })
+
+  expect.soft(response.status()).toBe(StatusCodes.OK)
+
+  const responseBody = await response.json()
+
+  expect.soft(responseBody.riskLevel).toBe('Medium Risk')
+})
+
+test('Request with correctly formatted body returns 200 (High risk)', async ({ request }) => {
+  const response = await request.post(`${baseUrl}/${endpoint}`, {
+    data: { ...LoanCalcDto.createRandomData(), debt: 3000, age: 25, employed: false },
+  })
+
+  expect.soft(response.status()).toBe(StatusCodes.OK)
+
+  const responseBody = await response.json()
+
+  expect.soft(responseBody.riskLevel).toBe('Very High Risk')
+})
