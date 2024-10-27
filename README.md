@@ -29,11 +29,11 @@
 
 ### HW 10
 
-| Scenario no. | Scenario description                                          |
-|--------------|---------------------------------------------------------------|
-| 1            | Request with correctly formatted body returns 200 (Low risk)  |
-| 2            | Request with correctly formatted body returns 200 (Med risk)  |
-| 3            | Request with correctly formatted body returns 200 (High risk) |
-| 4            | Request with negative debt returns 400 error                  |
-| 5            | Request with negative debt returns 400 error                  |
-| 5            | Request with age 15 returns 400 error                         |
+| Scenario no. | Scenario description                                                         |
+|--------------|------------------------------------------------------------------------------|
+| 1            | Request with correctly formatted body returns 200 (Low risk)                 |
+| 2            | Request with correctly formatted body returns 200 (Med risk)                 |
+| 3            | Request with correctly formatted body returns 200 (Very High risk; rejected) |
+| 4            | Request with negative debt returns 400 error                                 |
+| 5            | Request with negative income returns 400 error                               |
+| 6            | Request with age 5 returns 400 error                                         |
