@@ -23,7 +23,7 @@ test('get order with correct id should receive code 200', async ({ request }) =>
 })
 
 test('post order with correct data should receive code 200', async ({ request }) => {
-  const body = new OrderDto('OPEN', 0, 'Julie', '12345', 'delivery after 5', 0)
+  const body = OrderDto.createOrderWithCorrectRandomData()
 
   // Send a POST request to the server
   const response = await request.post('https://backend.tallinn-learning.ee/test-orders', {
@@ -46,11 +46,13 @@ test('get order with id outside range should receive code 400', async ({ request
 })
 
 test('if status is set to CLOSED it returns 400', async ({ request }) => {
-  const body = new OrderDto('CLOSED', 0, 'Julie', '12345', 'delivery after 5', 0)
-
+  const body = OrderDto.createOrderWithCorrectRandomData()
   // Send a POST request to the server
   const response = await request.post('https://backend.tallinn-learning.ee/test-orders', {
-    data: body,
+    data: {
+      ...body,
+      status: 'CLOSED',
+    },
   })
   expect(response.status()).toBe(StatusCodes.BAD_REQUEST)
 })
@@ -68,7 +70,7 @@ test('PUT Request containing ID and valid key updates order and returns order ob
 
   const header = { api_key: key }
 
-  const body = new OrderDto('OPEN', 0, 'Julie', '12345', 'delivery after 5', 0)
+  const body = OrderDto.createOrderWithCorrectRandomData()
 
   const res = await req.put(`${baseUrl}/${endpoint}/${orderId}`, { data: body, headers: header })
 
@@ -82,7 +84,7 @@ test('PUT Request without valid key is rejected as unauthorised', async ({ reque
 
   const header = { api_key: key }
 
-  const body = new OrderDto('OPEN', 0, 'Julie', '12345', 'delivery after 5', 0)
+  const body = OrderDto.createOrderWithCorrectRandomData()
 
   const res = await req.put(`${baseUrl}/${endpoint}/${orderId}`, { data: body, headers: header })
 
@@ -96,7 +98,7 @@ test('PUT Request with ID out of range fails as bad request', async ({ request: 
 
   const header = { api_key: key }
 
-  const body = new OrderDto('OPEN', 0, 'Julie', '12345', 'delivery after 5', 0)
+  const body = OrderDto.createOrderWithCorrectRandomData()
 
   const res = await req.put(`${baseUrl}/${endpoint}/${orderId}`, { data: body, headers: header })
 

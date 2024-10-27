@@ -23,7 +23,7 @@ export class OrderDto {
   }
 
   // add a method to create a new instance with random data
-  static createOrderWithRandomData(): OrderDto {
+  static createOrderWithCorrectRandomData(): OrderDto {
     return new OrderDto(
       'OPEN',
       Math.floor(Math.random() * 100),
