@@ -1,6 +1,7 @@
 import { expect, test } from '@playwright/test'
 
 import { StatusCodes } from 'http-status-codes'
+import { OrderDto } from '../dto/order-dto'
 
 let baseUrl: string
 let endpoint: string
@@ -22,18 +23,11 @@ test('get order with correct id should receive code 200', async ({ request }) =>
 })
 
 test('post order with correct data should receive code 200', async ({ request }) => {
-  // prepare request body
-  const requestBody = {
-    status: 'OPEN',
-    courierId: 0,
-    customerName: 'string',
-    customerPhone: 'string',
-    comment: 'string',
-    id: 0,
-  }
+  const body = new OrderDto('OPEN', 0, 'Julie', '12345', 'delivery after 5', 0)
+
   // Send a POST request to the server
   const response = await request.post('https://backend.tallinn-learning.ee/test-orders', {
-    data: requestBody,
+    data: body,
   })
   // Log the response status and body
   console.log('response status:', response.status())
@@ -52,18 +46,11 @@ test('get order with id outside range should receive code 400', async ({ request
 })
 
 test('if status is set to CLOSED it returns 400', async ({ request }) => {
-  // prepare request body
-  const requestBody = {
-    status: 'CLOSED',
-    courierId: 0,
-    customerName: 'string',
-    customerPhone: 'string',
-    comment: 'string',
-    id: 0,
-  }
+  const body = new OrderDto('CLOSED', 0, 'Julie', '12345', 'delivery after 5', 0)
+
   // Send a POST request to the server
   const response = await request.post('https://backend.tallinn-learning.ee/test-orders', {
-    data: requestBody,
+    data: body,
   })
   expect(response.status()).toBe(StatusCodes.BAD_REQUEST)
 })
@@ -81,14 +68,7 @@ test('PUT Request containing ID and valid key updates order and returns order ob
 
   const header = { api_key: key }
 
-  const body = {
-    status: 'OPEN',
-    courierId: 12345,
-    customerName: 'John Smith',
-    customerPhone: '67890',
-    comment: 'Delivery after 5pm',
-    id: 54321,
-  }
+  const body = new OrderDto('OPEN', 0, 'Julie', '12345', 'delivery after 5', 0)
 
   const res = await req.put(`${baseUrl}/${endpoint}/${orderId}`, { data: body, headers: header })
 
@@ -102,14 +82,7 @@ test('PUT Request without valid key is rejected as unauthorised', async ({ reque
 
   const header = { api_key: key }
 
-  const body = {
-    status: 'OPEN',
-    courierId: 12345,
-    customerName: 'John Smith',
-    customerPhone: '67890',
-    comment: 'Delivery after 5pm',
-    id: 54321,
-  }
+  const body = new OrderDto('OPEN', 0, 'Julie', '12345', 'delivery after 5', 0)
 
   const res = await req.put(`${baseUrl}/${endpoint}/${orderId}`, { data: body, headers: header })
 
@@ -123,14 +96,7 @@ test('PUT Request with ID out of range fails as bad request', async ({ request: 
 
   const header = { api_key: key }
 
-  const body = {
-    status: 'OPEN',
-    courierId: 12345,
-    customerName: 'John Smith',
-    customerPhone: '67890',
-    comment: 'Delivery after 5pm',
-    id: 54321,
-  }
+  const body = new OrderDto('OPEN', 0, 'Julie', '12345', 'delivery after 5', 0)
 
   const res = await req.put(`${baseUrl}/${endpoint}/${orderId}`, { data: body, headers: header })
 
