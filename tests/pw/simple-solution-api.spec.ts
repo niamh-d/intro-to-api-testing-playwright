@@ -32,7 +32,11 @@ test('post order with correct data should receive code 200', async ({ request })
   // Log the response status and body
   console.log('response status:', response.status())
   console.log('response body:', await response.json())
-  expect(response.status()).toBe(StatusCodes.OK)
+  expect.soft(response.status()).toBe(StatusCodes.OK)
+
+  const responseBody = await response.json()
+  expect.soft(responseBody.status).toBe('OPEN')
+  expect.soft(responseBody.customerName).toBe('John Doe')
 })
 
 test('get order with id outside range should receive code 400', async ({ request }) => {

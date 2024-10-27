@@ -6,7 +6,7 @@ export class OrderDto {
   comment: string
   id: number
 
-  constructor(
+  private constructor(
     status: string,
     courierId: number,
     customerName: string,
