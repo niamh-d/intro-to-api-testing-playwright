@@ -2,10 +2,11 @@ function randomInt(min: number, max: number): number {
   return Math.floor(Math.random() * (max - min)) + min
 }
 
-function assignMinIncomeAndMaxDebt(risk: string): number[] {
-  if (risk === 'low') return [2_000, 0, 500, 1_000]
-  if (risk === 'med') return [2_000, 0, 1_000, 2_000]
-  return [0, 1_000, 5_000, 10_000]
+function assignMaxAndMinByRiskLevel(risk: string): number[] {
+  // minIncome, minDebt, maxDebt, maxLoanAmount, minAge, maxAge
+  if (risk === 'low') return [2_000, 0, 500, 1_000, 30, 50]
+  if (risk === 'medium') return [1_500, 0, 2_200, 2_200, 16, 29]
+  return [0, 2_000, 10_000, 10_000, 31, 100]
 }
 
 export default class LoanCalcDto {
@@ -34,11 +35,10 @@ export default class LoanCalcDto {
 
   static createRandomData(risk: string = 'low'): LoanCalcDto {
     const maxIncome = 5_000
-    const minAge = 16
-    const maxAge = 100
     const minLoanAmount = 100
 
-    const [minIncome, minDebt, maxDebt, maxLoanAmount] = assignMinIncomeAndMaxDebt(risk)
+    const [minIncome, minDebt, maxDebt, maxLoanAmount, minAge, maxAge] =
+      assignMaxAndMinByRiskLevel(risk)
     return new LoanCalcDto(
       randomInt(minIncome, maxIncome),
       randomInt(minDebt, maxDebt),
