@@ -26,7 +26,7 @@ test('Request with correctly formatted body returns 200 (Low risk)', async ({ re
   expect.soft(responseBody.riskPeriods).toEqual(periodArr)
 })
 
-test('Request with correctly formatted body returns 200 (Med risk)', async ({ request }) => {
+test('Request with correctly formatted body returns 200 (Medium risk)', async ({ request }) => {
   const response = await request.post(`${baseUrl}/${endpoint}`, {
     data: { ...LoanCalcDto.createRandomData('medium') },
   })
@@ -72,7 +72,7 @@ test('Request with negative income returns 400 error', async ({ request }) => {
   expect(response.status()).toBe(StatusCodes.BAD_REQUEST)
 })
 
-// API SHOULD RETURN NEGATIVE DECISION BUT RETURN POSITIVE INSTEAD
+// API SHOULD RETURN NEGATIVE DECISION BUT INSTEAD RETURNS POSITIVE
 test('Request with age 5 returns rejected decision', async ({ request }) => {
   const response = await request.post(`${baseUrl}/${endpoint}`, {
     data: { ...LoanCalcDto.createRandomData(), age: 5 },
