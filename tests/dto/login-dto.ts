@@ -7,12 +7,12 @@ export class LoginDto {
     this.password = password
   }
 
-  static createLoginWithCorrectData(): LoginDto {
+  static createLoginWithCorrectCredentials(): LoginDto {
     // eslint-disable-next-line no-undef
     return new LoginDto(process.env.USER || '', process.env.PASSWORD || '')
   }
 
-  static createLoginWithIncorrectData(): LoginDto {
+  static createLoginWithIncorrectCredentials(): LoginDto {
     return new LoginDto('incorrect-username', 'incorrect-password')
   }
 }
