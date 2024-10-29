@@ -19,6 +19,8 @@ test('Incorrect login credentials returns 401', async ({ request }) => {
 })
 
 test('Correct login credentials returns 200', async ({ request }) => {
+  console.log(LoginDto.createLoginWithCorrectCredentials())
+
   const response = await request.post(`${baseUrl}/${endpoint}`, {
     data: LoginDto.createLoginWithCorrectCredentials(),
   })
