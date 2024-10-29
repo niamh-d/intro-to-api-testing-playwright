@@ -7,7 +7,7 @@ let endpoint: string
 
 test.beforeAll(async () => {
   baseUrl = 'https://backend.tallinn-learning.ee'
-  endpoint = 'api/login/student'
+  endpoint = 'login/student'
 })
 
 test('Incorrect login credentials returns 401', async ({ request }) => {
@@ -16,4 +16,11 @@ test('Incorrect login credentials returns 401', async ({ request }) => {
   })
 
   expect.soft(response.status()).toBe(StatusCodes.UNAUTHORIZED)
+})
+
+test('Correct login credentials returns 200', async ({ request }) => {
+  const response = await request.post(`${baseUrl}/${endpoint}`, {
+    data: LoginDto.createLoginWithCorrectCredentials(),
+  })
+  expect.soft(response.status()).toBe(StatusCodes.OK)
 })
