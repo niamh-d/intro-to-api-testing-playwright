@@ -13,7 +13,7 @@ test.beforeAll(async () => {
 
 test('Request with correctly formatted body returns 200 (Low risk)', async ({ request }) => {
   const response = await request.post(`${baseUrl}/${endpoint}`, {
-    data: LoanCalcDto.createRandomData(),
+    data: LoanCalcDto.createLoanApplicationDtoWithRandomisedData(),
   })
 
   expect.soft(response.status()).toBe(StatusCodes.OK)
@@ -28,7 +28,7 @@ test('Request with correctly formatted body returns 200 (Low risk)', async ({ re
 
 test('Request with correctly formatted body returns 200 (Medium risk)', async ({ request }) => {
   const response = await request.post(`${baseUrl}/${endpoint}`, {
-    data: { ...LoanCalcDto.createRandomData('medium') },
+    data: { ...LoanCalcDto.createLoanApplicationDtoWithRandomisedData('medium') },
   })
 
   expect.soft(response.status()).toBe(StatusCodes.OK)
@@ -45,7 +45,7 @@ test('Request with correctly formatted body returns 200 (Very High risk; rejecte
   request,
 }) => {
   const response = await request.post(`${baseUrl}/${endpoint}`, {
-    data: { ...LoanCalcDto.createRandomData('high'), employed: false },
+    data: { ...LoanCalcDto.createLoanApplicationDtoWithRandomisedData('high'), employed: false },
   })
 
   expect.soft(response.status()).toBe(StatusCodes.OK)
@@ -58,7 +58,7 @@ test('Request with correctly formatted body returns 200 (Very High risk; rejecte
 
 test('Request with negative debt returns 400 error', async ({ request }) => {
   const response = await request.post(`${baseUrl}/${endpoint}`, {
-    data: { ...LoanCalcDto.createRandomData(), debt: -500 },
+    data: { ...LoanCalcDto.createLoanApplicationDtoWithRandomisedData(), debt: -500 },
   })
 
   expect(response.status()).toBe(StatusCodes.BAD_REQUEST)
@@ -66,7 +66,7 @@ test('Request with negative debt returns 400 error', async ({ request }) => {
 
 test('Request with negative income returns 400 error', async ({ request }) => {
   const response = await request.post(`${baseUrl}/${endpoint}`, {
-    data: { ...LoanCalcDto.createRandomData(), income: -500 },
+    data: { ...LoanCalcDto.createLoanApplicationDtoWithRandomisedData(), income: -500 },
   })
 
   expect(response.status()).toBe(StatusCodes.BAD_REQUEST)
@@ -75,7 +75,7 @@ test('Request with negative income returns 400 error', async ({ request }) => {
 // API SHOULD RETURN NEGATIVE DECISION BUT INSTEAD RETURNS POSITIVE
 test('Request with age 5 returns rejected decision', async ({ request }) => {
   const response = await request.post(`${baseUrl}/${endpoint}`, {
-    data: { ...LoanCalcDto.createRandomData(), age: 5 },
+    data: { ...LoanCalcDto.createLoanApplicationDtoWithRandomisedData(), age: 5 },
   })
 
   expect.soft(response.status()).toBe(StatusCodes.OK)

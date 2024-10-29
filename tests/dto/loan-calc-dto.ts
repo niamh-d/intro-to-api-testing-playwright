@@ -33,7 +33,7 @@ export default class LoanCalcDto {
     this.loanPeriod = loanPeriod
   }
 
-  static createRandomData(risk: string = 'low'): LoanCalcDto {
+  static createLoanApplicationDtoWithRandomisedData(risk: string = 'low'): LoanCalcDto {
     const maxIncome = 5_000
     const minLoanAmount = 100
 
