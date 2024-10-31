@@ -4,7 +4,7 @@ export class OrderDto {
   customerName: string
   customerPhone: string
   comment: string
-  id: number
+  id: number | undefined
 
   private constructor(
     status: string,
@@ -22,7 +22,6 @@ export class OrderDto {
     this.id = id
   }
 
-  // add a method to create a new instance with random data
   static createOrderWithCorrectRandomData(): OrderDto {
     return new OrderDto(
       'OPEN',
@@ -31,6 +30,17 @@ export class OrderDto {
       '+123456789',
       'Urgent order',
       Math.floor(Math.random() * 100),
+    )
+  }
+
+  static createOrderWithUndefinedOrderId(): OrderDto {
+    return new OrderDto(
+      'OPEN',
+      Math.floor(Math.random() * 100),
+      'John Doe',
+      '+123456789',
+      'Urgent order',
+      undefined,
     )
   }
 }

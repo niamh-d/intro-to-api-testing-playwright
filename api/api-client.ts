@@ -45,7 +45,7 @@ export class ApiClient {
   async createOrderAndReturnOrderId(): Promise<number> {
     console.log('Creating order...')
     const response = await this.request.post(`${serviceURL}${orderPath}`, {
-      data: OrderDto.createOrderWithCorrectRandomData(),
+      data: OrderDto.createOrderWithUndefinedOrderId(),
       headers: {
         Authorization: `Bearer ${this.jwt}`,
       },
