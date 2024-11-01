@@ -8,10 +8,15 @@ const serviceURL = 'https://backend.tallinn-learning.ee/'
 const loginPath = 'login/student'
 const orderPath = 'orders'
 
+type Headers = {
+  Authorization: string
+}
+
 export class ApiClient {
   static instance: ApiClient
   private request: APIRequestContext
   private jwt: string = ''
+  private headers: Headers | undefined
 
   private constructor(request: APIRequestContext) {
     this.request = request
@@ -40,15 +45,42 @@ export class ApiClient {
     this.jwt = await authResponse.text()
     console.log('jwt received:')
     console.log(this.jwt)
+    this.headers = { Authorization: `Bearer ${this.jwt}` }
+  }
+
+  async deleteOrderById(orderId: number): Promise<void> {
+    console.log('Delete order...')
+    const response = await this.request.delete(`${serviceURL}${orderPath}/${orderId}`, {
+      headers: this.headers,
+    })
+    console.log('Delete response: ', response)
+
+    expect(response.status()).toBe(StatusCodes.OK)
+    const body = await response.json()
+    console.log('Order deleted: ')
+    console.log(body)
+    expect.soft(body).toBe(true)
+  }
+
+  async getOrderById(orderId: number): Promise<void> {
+    console.log(`Fetching order with ID ${orderId}`)
+    const response = await this.request.get(`${serviceURL}${orderPath}/${orderId}`, {
+      headers: this.headers,
+    })
+    console.log('Order response: ', response)
+
+    expect(response .status()).toBe(StatusCodes.OK)
+    const order = await response.json()
+    const {id} = order
+    expect.soft(id).toBeDefined()
+    expect.soft(id).toBe(orderId)
   }
 
   async createOrderAndReturnOrderId(): Promise<number> {
     console.log('Creating order...')
     const response = await this.request.post(`${serviceURL}${orderPath}`, {
       data: OrderDto.createOrderWithUndefinedOrderId(),
-      headers: {
-        Authorization: `Bearer ${this.jwt}`,
-      },
+      headers: this.headers,
     })
     console.log('Order response: ', response)
 
