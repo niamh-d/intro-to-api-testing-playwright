@@ -90,11 +90,11 @@ test.describe('TASK 2.2 – Using Client', () => {
 
   // SUB-PART 1) AUTHORISE AND GET ORDER BY ID
   test('Successfully get an order by its ID', async () => {
-    await apiClient.getOrder(id)
+    await apiClient.getOrderById(id)
   })
 
   // SUB-PART 2) DELETE ORDER BY ID
   test('Successfully delete an order by its ID', async () => {
-    await apiClient.deleteOrder(id)
+    await apiClient.deleteOrderById(id)
   })
 })

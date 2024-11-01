@@ -48,7 +48,7 @@ export class ApiClient {
     this.headers = { Authorization: `Bearer ${this.jwt}` }
   }
 
-  async deleteOrder(orderId: number): Promise<void> {
+  async deleteOrderById(orderId: number): Promise<void> {
     console.log('Delete order...')
     const response = await this.request.delete(`${serviceURL}${orderPath}/${orderId}`, {
       headers: this.headers,
@@ -62,7 +62,7 @@ export class ApiClient {
     expect.soft(body).toBe(true)
   }
 
-  async getOrder(orderId: number): Promise<void> {
+  async getOrderById(orderId: number): Promise<void> {
     console.log(`Fetching order with ID ${orderId}`)
     const response = await this.request.get(`${serviceURL}${orderPath}/${orderId}`, {
       headers: this.headers,
