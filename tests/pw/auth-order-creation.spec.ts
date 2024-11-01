@@ -12,7 +12,7 @@ test('Successful authorization and order creation', async ({ request }) => {
 
 // HW 12
 
-// TASK 2.1: AUTHORISE AND GET ORDER BY ID (NOT USING API CLIENT)
+// TASK 2.1 – Without Client
 
 type Headers = {
   Authorization: string
@@ -24,46 +24,77 @@ const loginEndpoint = 'login/student'
 const orderEndpoint = 'orders'
 let headers: Headers
 
-test.beforeAll(async ({ request }) => {
-  const response = await request.post(`${baseUrl}/${loginEndpoint}`, {
-    data: LoginDto.createLoginWithCorrectCredentials(),
+test.describe('TASK 2.1 – Without Client', () => {
+  test.beforeAll(async ({ request }) => {
+    const response = await request.post(`${baseUrl}/${loginEndpoint}`, {
+      data: LoginDto.createLoginWithCorrectCredentials(),
+    })
+    expect.soft(response.status()).toBe(StatusCodes.OK)
+    token = await response.text()
+    headers = { Authorization: `Bearer ${token}` }
   })
-  expect.soft(response.status()).toBe(StatusCodes.OK)
-  token = await response.text()
-  headers = { Authorization: `Bearer ${token}` }
-})
 
-test.beforeEach(async ({ request }) => {
-  const orderResponse = await request.post(`${baseUrl}/${orderEndpoint}`, {
-    data: OrderDto.createOrderWithUndefinedOrderId(),
-    headers: headers,
+  test.beforeEach(async ({ request }) => {
+    const orderResponse = await request.post(`${baseUrl}/${orderEndpoint}`, {
+      data: OrderDto.createOrderWithUndefinedOrderId(),
+      headers: headers,
+    })
+    const orderResponseBody = await orderResponse.json()
+    orderId = orderResponseBody.id
+    expect.soft(orderId).toBeDefined()
   })
-  const orderResponseBody = await orderResponse.json()
-  orderId = orderResponseBody.id
-  expect.soft(orderId).toBeDefined()
-})
 
-test.afterEach(() => {
-  orderId = null
-})
-
-test('Successfully get an order by its ID', async ({ request }) => {
-  const orderResponse = await request.get(`${baseUrl}/${orderEndpoint}/${orderId}`, {
-    headers: headers,
+  test.afterEach(() => {
+    orderId = null
   })
-  expect(orderResponse.status()).toBe(StatusCodes.OK)
-  const order = await orderResponse.json()
-  const { id: retrievedOrderId } = order
-  expect.soft(retrievedOrderId).toBeDefined()
-  expect.soft(retrievedOrderId).toBe(orderId)
-})
 
-test('Successfully delete an order by its ID', async ({ request }) => {
-  const deleteResponse = await request.delete(`${baseUrl}/${orderEndpoint}/${orderId}`, {
-    headers: headers,
+  // SUB-PART 1) AUTHORISE AND GET ORDER BY ID
+
+  test('Successfully get an order by its ID', async ({ request }) => {
+    console.log(headers)
+    const orderResponse = await request.get(`${baseUrl}/${orderEndpoint}/${orderId}`, {
+      headers: headers,
+    })
+    expect(orderResponse.status()).toBe(StatusCodes.OK)
+    const order = await orderResponse.json()
+    const { id: retrievedOrderId } = order
+    expect.soft(retrievedOrderId).toBeDefined()
+    expect.soft(retrievedOrderId).toBe(orderId)
   })
-  expect.soft(deleteResponse.status()).toBe(StatusCodes.OK)
 
-  const deleteResponseBody = await deleteResponse.json()
-  expect.soft(deleteResponseBody).toBe(true)
+  // SUB-PART 2) DELETE ORDER BY ID
+
+  test('Successfully delete an order by its ID', async ({ request }) => {
+    console.log(headers)
+
+    const deleteResponse = await request.delete(`${baseUrl}/${orderEndpoint}/${orderId}`, {
+      headers: headers,
+    })
+    console.log(deleteResponse)
+    expect.soft(deleteResponse.status()).toBe(StatusCodes.OK)
+
+    const deleteResponseBody = await deleteResponse.json()
+    expect.soft(deleteResponseBody).toBe(true)
+  })
+})
+// TASK 2.2 – Using Client
+
+let apiClient: ApiClient
+
+test.describe('TASK 2.2 – Using Client', () => {
+  test.beforeEach(async ({ request }) => {
+    apiClient = await ApiClient.getInstance(request)
+  })
+
+  // SUB-PART 1) AUTHORISE AND GET ORDER BY ID
+  test('Successfully get an order by its ID', async () => {
+    const orderId = await apiClient.createOrderAndReturnOrderId()
+    await apiClient.getOrder(orderId)
+  })
+
+  // SUB-PART 2) DELETE ORDER BY ID
+  test('Successfully delete an order by its ID', async () => {
+    const orderId = await apiClient.createOrderAndReturnOrderId()
+    await apiClient.deleteOrder(orderId)
+  })
 })
