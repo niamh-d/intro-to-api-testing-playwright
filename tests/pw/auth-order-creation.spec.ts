@@ -80,21 +80,21 @@ test.describe('TASK 2.1 – Without Client', () => {
 // TASK 2.2 – Using Client
 
 let apiClient: ApiClient
+let id: number
 
 test.describe('TASK 2.2 – Using Client', () => {
   test.beforeEach(async ({ request }) => {
     apiClient = await ApiClient.getInstance(request)
+    id = await apiClient.createOrderAndReturnOrderId()
   })
 
   // SUB-PART 1) AUTHORISE AND GET ORDER BY ID
   test('Successfully get an order by its ID', async () => {
-    const orderId = await apiClient.createOrderAndReturnOrderId()
-    await apiClient.getOrder(orderId)
+    await apiClient.getOrder(id)
   })
 
   // SUB-PART 2) DELETE ORDER BY ID
   test('Successfully delete an order by its ID', async () => {
-    const orderId = await apiClient.createOrderAndReturnOrderId()
-    await apiClient.deleteOrder(orderId)
+    await apiClient.deleteOrder(id)
   })
 })
