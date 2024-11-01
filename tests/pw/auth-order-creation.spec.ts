@@ -18,7 +18,7 @@ type Headers = {
   Authorization: string
 }
 let token: string
-let orderId: number
+let orderId: number | null
 const baseUrl = 'https://backend.tallinn-learning.ee'
 const loginEndpoint = 'login/student'
 const orderEndpoint = 'orders'
@@ -43,12 +43,27 @@ test.beforeEach(async ({ request }) => {
   expect.soft(orderId).toBeDefined()
 })
 
+test.afterEach(() => {
+  orderId = null
+})
+
 test('Successfully get an order by its ID', async ({ request }) => {
   const orderResponse = await request.get(`${baseUrl}/${orderEndpoint}/${orderId}`, {
     headers: headers,
   })
+  expect(orderResponse.status()).toBe(StatusCodes.OK)
   const order = await orderResponse.json()
   const { id: retrievedOrderId } = order
   expect.soft(retrievedOrderId).toBeDefined()
   expect.soft(retrievedOrderId).toBe(orderId)
+})
+
+test('Successfully delete an order by its ID', async ({ request }) => {
+  const deleteResponse = await request.delete(`${baseUrl}/${orderEndpoint}/${orderId}`, {
+    headers: headers,
+  })
+  expect.soft(deleteResponse.status()).toBe(StatusCodes.OK)
+
+  const deleteResponseBody = await deleteResponse.json()
+  expect.soft(deleteResponseBody).toBe(true)
 })
